@@ -44,14 +44,6 @@ enum CleanRemovalOutcome: Equatable {
     case removed
     case alreadyAbsent
     case kept(String)
-
-    var description: String {
-        switch self {
-        case .removed: return "Removed in Music"
-        case .alreadyAbsent: return "Already absent in Music"
-        case .kept(let reason): return "Kept — \(reason)"
-        }
-    }
 }
 
 @MainActor

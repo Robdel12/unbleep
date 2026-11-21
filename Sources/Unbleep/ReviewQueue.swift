@@ -30,8 +30,7 @@ struct ReviewQueue: Codable {
     }
 
     var approved: Review {
-        Review(version: review.version, storefront: review.storefront, scanned: review.scanned,
-               swaps: approvedSwaps, unmatched: [])
+        Review(version: review.version, storefront: review.storefront, swaps: approvedSwaps, unmatched: [])
     }
 
     mutating func decide(_ decision: Decision) {

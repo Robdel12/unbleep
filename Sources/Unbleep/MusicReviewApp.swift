@@ -1,18 +1,8 @@
 import SwiftUI
 
-#if !SWIFT_PACKAGE
 @main
-#endif
 struct MusicReviewApp: App {
-    @State private var model: MusicReviewModel
-
-    init() {
-        let arguments = CommandLine.arguments.dropFirst()
-        let url = arguments.first == "--gui"
-            ? arguments.dropFirst().first.flatMap { $0.hasPrefix("-") ? nil : URL(fileURLWithPath: $0) }
-            : nil
-        _model = State(initialValue: MusicReviewModel(opening: url))
-    }
+    @State private var model = MusicReviewModel()
 
     var body: some Scene {
         Window("Unbleep", id: "review") {

@@ -73,21 +73,16 @@ func isStorefrontID(_ id: String) -> Bool {
     id.utf8.count == 2 && id.utf8.allSatisfy { (97...122).contains($0) }
 }
 
-private func suppliedDeveloperToken(_ environment: [String: String]) throws -> String? {
-    if let token = environment["MUSIC_DEVELOPER_TOKEN"], !token.isEmpty { return token }
-    let team = environment["MUSIC_TEAM_ID"] ?? ""
-    let keyID = environment["MUSIC_KEY_ID"] ?? ""
-    let path = environment["MUSIC_KEY_FILE"] ?? ""
-    if team.isEmpty && keyID.isEmpty && path.isEmpty { return nil }
-    guard !team.isEmpty, !keyID.isEmpty, !path.isEmpty else {
-        throw ToolError("Set MUSIC_TEAM_ID, MUSIC_KEY_ID, and MUSIC_KEY_FILE together, as described in docs/usage.md.")
-    }
+private func suppliedDeveloperToken(_ setup: MusicKitSetup) throws -> String? {
+    guard setup.isComplete else { return nil }
+    let team = setup.teamID.trimmingCharacters(in: .whitespacesAndNewlines)
+    let keyID = setup.keyID.trimmingCharacters(in: .whitespacesAndNewlines)
     let key: P256.Signing.PrivateKey
     do {
-        let pem = try String(contentsOfFile: NSString(string: path).expandingTildeInPath, encoding: .utf8)
+        let pem = try String(contentsOfFile: setup.keyPath, encoding: .utf8)
         key = try P256.Signing.PrivateKey(pemRepresentation: pem)
     } catch {
-        throw ToolError("Couldn't load the MusicKit .p8 key at MUSIC_KEY_FILE.")
+        throw ToolError("Couldn’t load the .p8 key. Choose it again in MusicKit Setup.")
     }
 
     let now = Int(Date().timeIntervalSince1970)
@@ -137,8 +132,8 @@ struct AppleMusic {
     private let catalogCache: CatalogResponseCache?
     private var catalog: String { "/v1/catalog/\(storefront)" }
 
-    static func configureTokenProvider(environment: [String: String]) throws {
-        if let supplied = try suppliedDeveloperToken(environment) {
+    static func configureTokenProvider(setup: MusicKitSetup) throws {
+        if let supplied = try suppliedDeveloperToken(setup) {
             MusicDataRequest.tokenProvider = SuppliedTokenProvider(token: supplied)
         } else {
             MusicDataRequest.tokenProvider = DefaultMusicTokenProvider()
@@ -146,10 +141,10 @@ struct AppleMusic {
     }
 
     static func connect(
-        environment: [String: String] = ProcessInfo.processInfo.environment,
+        setup: MusicKitSetup,
         catalogCache: CatalogResponseCache? = nil
     ) async throws -> Self {
-        try configureTokenProvider(environment: environment)
+        try configureTokenProvider(setup: setup)
         let url = try requestURL("/v1/me/storefront", [:])
         let data = try await send(URLRequest(url: url))
         let page = try JSONDecoder().decode(Page.self, from: data)

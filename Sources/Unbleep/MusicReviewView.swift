@@ -1,9 +1,7 @@
 import SwiftUI
-import UniformTypeIdentifiers
 
 struct MusicReviewView: View {
     let model: MusicReviewModel
-    @State private var importing = false
     @State private var showingSetup = false
     @State private var audition = TrackAudition()
 
@@ -18,7 +16,7 @@ struct MusicReviewView: View {
                                 .id(swap.localID)
                             ReviewActivityStatus(activity: model.activity)
                         } else {
-                            ReviewFinishView(queue: queue, model: model, openReview: { importing = true })
+                            ReviewFinishView(queue: queue, model: model)
                         }
                     } else {
                         intro
@@ -51,12 +49,6 @@ struct MusicReviewView: View {
         .sheet(isPresented: $showingSetup) {
             MusicKitSetupView(setup: model.setup, save: model.saveSetup)
         }
-        .fileImporter(isPresented: $importing, allowedContentTypes: [.json]) { result in
-            switch result {
-            case .success(let url): model.openReview(url)
-            case .failure(let error): model.report(error)
-            }
-        }
         .alert("Remove clean tracks?", isPresented: Binding(
             get: { model.removalPlan != nil },
             set: { if !$0 { model.cancelRemoval() } }
@@ -77,15 +69,12 @@ struct MusicReviewView: View {
                 .tracking(-0.75)
             Text("Scan your Music library to compare each clean track with its explicit match.")
                 .foregroundStyle(.secondary)
-            HStack {
-                Button("Scan Library") { Task { await model.scan() } }
-                    .buttonStyle(.borderedProminent)
-                    .keyboardShortcut(.defaultAction)
-                Button("Open Review…") { importing = true }
-            }
-            .controlSize(.large)
-            .padding(.top, 8)
-            .disabled(model.isWorking)
+            Button("Scan Library") { Task { await model.scan() } }
+                .buttonStyle(.borderedProminent)
+                .keyboardShortcut(.defaultAction)
+                .controlSize(.large)
+                .padding(.top, 8)
+                .disabled(model.isWorking)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }

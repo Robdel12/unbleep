@@ -9,17 +9,6 @@ struct MusicKitSetup: Codable {
     var isComplete: Bool {
         [teamID, keyID, keyPath].allSatisfy { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
     }
-
-    var environment: [String: String] {
-        var environment = ProcessInfo.processInfo.environment
-        if isComplete {
-            environment.removeValue(forKey: "MUSIC_DEVELOPER_TOKEN")
-            environment["MUSIC_TEAM_ID"] = teamID.trimmingCharacters(in: .whitespacesAndNewlines)
-            environment["MUSIC_KEY_ID"] = keyID.trimmingCharacters(in: .whitespacesAndNewlines)
-            environment["MUSIC_KEY_FILE"] = keyPath
-        }
-        return environment
-    }
 }
 
 @Observable
@@ -38,17 +27,15 @@ final class MusicReviewModel {
     private let defaults: UserDefaults?
     @ObservationIgnored private var catalogCache = CatalogResponseCache()
 
-    init(defaults: UserDefaults? = .standard, opening url: URL? = nil) {
+    init(defaults: UserDefaults? = .standard) {
         self.defaults = defaults
         if let data = defaults?.data(forKey: "musicKitSetup"),
            let setup = try? JSONDecoder().decode(MusicKitSetup.self, from: data) {
             self.setup = setup
         }
-        if let url {
-            openReview(url)
-        } else if let data = defaults?.data(forKey: "reviewQueue"),
-                  let queue = try? JSONDecoder().decode(ReviewQueue.self, from: data),
-                  (try? queue.review.validate()) != nil {
+        if let data = defaults?.data(forKey: "reviewQueue"),
+           let queue = try? JSONDecoder().decode(ReviewQueue.self, from: data),
+           (try? queue.review.validate()) != nil {
             self.queue = queue
         }
     }
@@ -69,25 +56,6 @@ final class MusicReviewModel {
         defaults?.set(try? JSONEncoder().encode(setup), forKey: "musicKitSetup")
     }
 
-    func report(_ error: Error) {
-        activity = .message(error.localizedDescription)
-    }
-
-    func openReview(_ url: URL) {
-        guard !isWorking else { return }
-        let access = url.startAccessingSecurityScopedResource()
-        defer { if access { url.stopAccessingSecurityScopedResource() } }
-        do {
-            let review = try JSONDecoder().decode(Review.self, from: Data(contentsOf: url))
-            try review.validate()
-            queue = ReviewQueue(review: review)
-            activity = .idle
-            saveQueue()
-        } catch {
-            report(error)
-        }
-    }
-
     func decide(_ decision: ReviewQueue.Decision) {
         guard !isWorking else { return }
         queue?.decide(decision)
@@ -106,7 +74,7 @@ final class MusicReviewModel {
             let api = try await connect(catalogCache: catalogCache)
             activity = .working("Reading tracks on this Mac…")
             let local = try readMacLibrary()
-            let review = try await preview(using: api, local: local) { message in
+            let review = try await matchCleanTracks(using: api, local: local) { message in
                 activity = .working(message)
             }
             queue = ReviewQueue(review: review)
@@ -253,12 +221,12 @@ final class MusicReviewModel {
 
     func authorizePlayback() async throws {
         try await authorizeLibrary()
-        try AppleMusic.configureTokenProvider(environment: setup.environment)
+        try AppleMusic.configureTokenProvider(setup: setup)
     }
 
     private func connect(catalogCache: CatalogResponseCache? = nil) async throws -> AppleMusic {
         try await authorizeLibrary()
-        return try await AppleMusic.connect(environment: setup.environment, catalogCache: catalogCache)
+        return try await AppleMusic.connect(setup: setup, catalogCache: catalogCache)
     }
 
     private func perform(_ label: String, _ work: () async throws -> Activity) async {
@@ -267,7 +235,7 @@ final class MusicReviewModel {
         do {
             activity = try await work()
         } catch {
-            report(error)
+            activity = .message(error.localizedDescription)
         }
     }
 }

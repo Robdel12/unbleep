@@ -3,7 +3,6 @@ import SwiftUI
 struct ReviewFinishView: View {
     let queue: ReviewQueue
     let model: MusicReviewModel
-    let openReview: () -> Void
 
     var body: some View {
         let unmatched = queue.unmatched
@@ -53,7 +52,6 @@ struct ReviewFinishView: View {
                     Button("Check Sync Again") { Task { await model.checkRemoval() } }
                 }
                 Button("Scan Again") { Task { await model.scan() } }
-                Button("Open Review…", action: openReview)
             } label: {
                 Label("Review Options", systemImage: "ellipsis.circle")
                     .labelStyle(.iconOnly)

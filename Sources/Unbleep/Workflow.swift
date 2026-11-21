@@ -24,15 +24,15 @@ private func possibleSourceIDs(for local: [LocalSong], in cloud: [Resource]) -> 
     })
 }
 
-private enum PreviewMatch {
+private enum TrackMatch {
     case swap(Swap)
     case unmatched(Unmatched)
 }
 
 @MainActor
-private func findPreviewMatch(
+private func findTrackMatch(
     for local: LocalSong, in cloud: [Resource], catalog: [String: Resource], using api: AppleMusic
-) async throws -> PreviewMatch {
+) async throws -> TrackMatch {
     let sources = cleanSources(for: local, in: cloud, catalog: catalog)
     guard sources.count == 1, let librarySong = sources.first, let id = librarySong.catalogID,
           let catalogSong = catalog[id], let original = catalogSong.song,
@@ -43,7 +43,6 @@ private func findPreviewMatch(
     }
 
     var candidates: [SongReference] = []
-    var match = "Apple-linked album edition"
     if let albumID = catalogSong.albumID {
         var linkedTracks: [Resource] = []
         for version in try await api.alternateAlbums(albumID) where isCatalogID(version.id) {
@@ -53,34 +52,32 @@ private func findPreviewMatch(
     }
     if candidates.isEmpty {
         candidates = explicitMatches(for: original, in: try await api.search(original.info))
-        match = "Catalog search"
     }
     guard candidates.count == 1, let replacement = candidates.first else {
         let reason = candidates.isEmpty ? "No playable explicit edition matched." : "Multiple explicit editions matched."
         return .unmatched(Unmatched(localID: local.id, song: local.info, reason: reason, candidates: candidates))
     }
     return .swap(Swap(localID: local.id, libraryID: librarySong.id, clean: original, explicit: replacement,
-                      match: match, alreadyInLibrary: containsCatalogSong(replacement, in: cloud),
+                      alreadyInLibrary: containsCatalogSong(replacement, in: cloud),
                       protectedBy: local.protections))
 }
 
 @MainActor
-func preview(
-    using api: AppleMusic, local: [LocalSong], onProgress: (String) -> Void = { _ in }
+func matchCleanTracks(
+    using api: AppleMusic, local: [LocalSong], onProgress: (String) -> Void
 ) async throws -> Review {
     let clean = local.filter(\.isClean)
-    print("Checking \(clean.count) clean tracks against your Apple Music library (\(api.storefront))…")
     onProgress("Reading your synced Music library…")
     let cloud = try await api.librarySongs { count in
         onProgress("Reading your synced Music library… \(count.formatted()) tracks loaded")
     }
     onProgress("Looking up catalog information for \(clean.count) clean tracks…")
     let catalog = try await api.catalogSongs(ids: possibleSourceIDs(for: clean, in: cloud))
-    var outcomes: [(Int, PreviewMatch)] = []
+    var outcomes: [(Int, TrackMatch)] = []
     for start in stride(from: 0, to: clean.count, by: 4) {
-        try await withThrowingTaskGroup(of: (Int, PreviewMatch).self) { group in
+        try await withThrowingTaskGroup(of: (Int, TrackMatch).self) { group in
             for (index, song) in clean.enumerated().dropFirst(start).prefix(4) {
-                group.addTask { (index, try await findPreviewMatch(for: song, in: cloud, catalog: catalog, using: api)) }
+                group.addTask { (index, try await findTrackMatch(for: song, in: cloud, catalog: catalog, using: api)) }
             }
             for try await match in group {
                 outcomes.append(match)
@@ -107,7 +104,7 @@ func preview(
                 reason: "Multiple clean tracks on this Mac match the same synced library entry.", candidates: [swap.explicit]))
         }
     }
-    return Review(version: 1, storefront: api.storefront, scanned: clean.count, swaps: unambiguous, unmatched: unmatched)
+    return Review(version: 1, storefront: api.storefront, swaps: unambiguous, unmatched: unmatched)
 }
 
 struct VerifiedSwap {
@@ -148,7 +145,7 @@ func resolveManualSwap(
         throw ToolError("Apple Music no longer shows this as a playable explicit match.")
     }
     return Swap(localID: local.id, libraryID: source.id, clean: original, explicit: replacement,
-                match: "Selected during review", alreadyInLibrary: containsCatalogSong(replacement, in: cloud),
+                alreadyInLibrary: containsCatalogSong(replacement, in: cloud),
                 protectedBy: local.protections)
 }
 

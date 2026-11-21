@@ -8,4 +8,4 @@ Download Unbleep from [Releases](https://github.com/Robdel12/unbleep/releases), 
 
 Click **Scan Library** to get started. Unbleep asks before removing clean copies and keeps the ones you’ve favorited or added to playlists.
 
-[Build it yourself or use the CLI](docs/usage.md)
+[Build it in Xcode](docs/usage.md)

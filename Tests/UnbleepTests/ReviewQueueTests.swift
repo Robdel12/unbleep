@@ -48,10 +48,18 @@ import Testing
     #expect(queue.nextApplicationAction == .addApproved)
 
     queue.startChanges()
-    let saved = try JSONEncoder().encode(queue)
+    let current = try JSONEncoder().encode(queue)
+    var previous = try #require(JSONSerialization.jsonObject(with: current) as? [String: Any])
+    var review = try #require(previous["review"] as? [String: Any])
+    let swaps = try #require(review["swaps"] as? [[String: Any]])
+    review["scanned"] = swaps.count
+    review["swaps"] = swaps.map { $0.merging(["match": "Catalog search"]) { _, old in old } }
+    previous["review"] = review
+    let saved = try JSONSerialization.data(withJSONObject: previous)
     let resumed = try JSONDecoder().decode(ReviewQueue.self, from: saved)
 
     #expect(resumed.application == nil)
+    #expect(resumed.approvedSwaps.map(\.localID) == ["first"])
     #expect(resumed.nextApplicationAction == .checkSync)
 }
 
@@ -159,7 +167,7 @@ private func manualChoice() -> (Unmatched, Swap) {
                          candidates: candidates)
     let swap = Swap(localID: item.localID, libraryID: "i.third",
                     clean: SongReference(id: "30", info: info, url: nil), explicit: candidates[1],
-                    match: "Selected during review", alreadyInLibrary: false, protectedBy: [])
+                    alreadyInLibrary: false, protectedBy: [])
     return (item, swap)
 }
 
@@ -169,8 +177,7 @@ private func reviewQueue(unmatched: [Unmatched] = []) -> ReviewQueue {
                             disc: 1, track: position + 1, milliseconds: 200_000)
         return Swap(localID: id, libraryID: "i.\(id)", clean: SongReference(id: "1\(position)", info: info, url: nil),
                     explicit: SongReference(id: "2\(position)", info: info, url: nil),
-                    match: "Catalog search", alreadyInLibrary: false, protectedBy: [])
+                    alreadyInLibrary: false, protectedBy: [])
     }
-    return ReviewQueue(review: Review(version: 1, storefront: "us", scanned: tracks.count + unmatched.count,
-                                     swaps: tracks, unmatched: unmatched))
+    return ReviewQueue(review: Review(version: 1, storefront: "us", swaps: tracks, unmatched: unmatched))
 }

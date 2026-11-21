@@ -8,8 +8,6 @@ struct SongInfo: Codable, Equatable {
     let track: Int
     let milliseconds: Int
 
-    var description: String { "\(artist) — \(title) (\(album), disc \(disc), track \(track))" }
-
     func matchesLibraryEntry(_ other: Self) -> Bool {
         sameTrack(other, album: .exact, tolerance: 1_250)
     }
@@ -61,7 +59,6 @@ struct Swap: Codable {
     let libraryID: String
     let clean: SongReference
     let explicit: SongReference
-    let match: String
     let alreadyInLibrary: Bool
     let protectedBy: [String]
 }
@@ -80,7 +77,6 @@ struct Unmatched: Codable {
 struct Review: Codable {
     let version: Int
     let storefront: String
-    let scanned: Int
     let swaps: [Swap]
     let unmatched: [Unmatched]
 

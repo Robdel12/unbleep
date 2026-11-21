@@ -11,7 +11,7 @@ struct MusicKitSetupView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("MusicKit Setup").font(.title2.weight(.semibold))
-            Text("MusicKit connects automatically when the app is signed for a MusicKit-enabled App ID. For an ad hoc build, choose your Media Services key here.")
+            Text("Unbleep connects automatically with a MusicKit-enabled build. You can also use your own Media Services key.")
                 .foregroundStyle(.secondary)
             Form {
                 TextField("Team ID", text: $setup.teamID)
