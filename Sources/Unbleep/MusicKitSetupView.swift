@@ -42,6 +42,8 @@ struct MusicKitSetupView: View {
         }
         .padding(22)
         .frame(width: 450)
+        .tint(.signal)
+        .preferredColorScheme(.dark)
         .fileImporter(isPresented: $choosingKey, allowedContentTypes: [UTType(filenameExtension: "p8") ?? .data]) { result in
             switch result {
             case .success(let url):

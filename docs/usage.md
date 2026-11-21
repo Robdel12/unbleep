@@ -6,9 +6,9 @@
 
 ## Review clean tracks
 
-Click **Scan Library**, then use **1** and **2** to play the clean and explicit versions. Press **Return** to queue a swap, **S** to skip, or **⌘Z** to undo. Unbleep saves your place when you close it.
+Click **Scan Library**, then use **1** and **2** to play the clean and explicit versions. Press **Return** to swap, **S** to skip, or **⌘Z** to undo. Unbleep saves your place when you close it.
 
-When you’re ready, click **Add Approved Versions**, then **Check Sync**. Unbleep asks before removing clean copies and keeps favorites, playlist tracks, purchases, and local files. If Apple Music has more than one matching edition, use **Compare** to choose.
+When you’re ready, click **Add Explicit Versions**, then **Check Sync**. Unbleep asks before removing clean copies and keeps favorites, playlist tracks, purchases, and local files. If Apple Music has more than one matching edition, use **Compare** to choose.
 
 ## Export a release
 

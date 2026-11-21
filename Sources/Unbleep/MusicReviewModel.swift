@@ -40,6 +40,15 @@ final class MusicReviewModel {
         }
     }
 
+    #if DEBUG
+    /// Builds a model in a fixed state for SwiftUI previews. Nothing is read from or saved to disk.
+    init(preview queue: ReviewQueue?, activity: Activity = .idle) {
+        defaults = nil
+        self.queue = queue
+        self.activity = activity
+    }
+    #endif
+
     var isWorking: Bool {
         if case .working = activity { return true }
         return false
