@@ -1,0 +1,11 @@
+.build/
+.codex/
+.DS_Store
+xcuserdata/
+unbleep-review*.json
+explicit-review*.json
+*.p8
+*.p12
+*.provisionprofile
+*.mobileprovision
+.env

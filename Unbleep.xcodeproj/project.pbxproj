@@ -1,0 +1,211 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2E98D8A9000A000000000012 /* Unbleep.icns in Resources */ = {isa = PBXBuildFile; fileRef = 2E98D8A9000A000000000011 /* Unbleep.icns */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		2E98D8A9000A000000000001 /* Unbleep.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Unbleep.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E98D8A9000A000000000002 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = script/Info.plist; sourceTree = "<group>"; };
+		2E98D8A9000A000000000011 /* Unbleep.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = Unbleep.icns; path = script/Unbleep.icns; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		2E98D8A9000A000000000003 /* Sources */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			name = Sources;
+			path = Sources/Unbleep;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2E98D8A9000A000000000004 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2E98D8A9000A000000000005 = {
+			isa = PBXGroup;
+			children = (
+				2E98D8A9000A000000000003 /* Sources */,
+				2E98D8A9000A000000000002 /* Info.plist */,
+				2E98D8A9000A000000000011 /* Unbleep.icns */,
+				2E98D8A9000A000000000006 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2E98D8A9000A000000000006 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2E98D8A9000A000000000001 /* Unbleep.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2E98D8A9000A000000000007 /* Unbleep */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2E98D8A9000A00000000000D /* Build configuration list for PBXNativeTarget "Unbleep" */;
+			buildPhases = (
+				2E98D8A9000A000000000009 /* Sources */,
+				2E98D8A9000A000000000004 /* Frameworks */,
+				2E98D8A9000A00000000000A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				2E98D8A9000A000000000003 /* Sources */,
+			);
+			name = Unbleep;
+			productName = Unbleep;
+			productReference = 2E98D8A9000A000000000001 /* Unbleep.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2E98D8A9000A000000000008 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+			};
+			buildConfigurationList = 2E98D8A9000A00000000000E /* Build configuration list for PBXProject "Unbleep" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2E98D8A9000A000000000005;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 2E98D8A9000A000000000006 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2E98D8A9000A000000000007 /* Unbleep */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2E98D8A9000A00000000000A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E98D8A9000A000000000012 /* Unbleep.icns in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2E98D8A9000A000000000009 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		2E98D8A9000A00000000000B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = J658W2V76T;
+				ENABLE_APP_SANDBOX = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = script/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stubbornmulesoftware.explicitmusic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_REQUIRED = YES;
+			};
+			name = Debug;
+		};
+		2E98D8A9000A00000000000C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = script/Unbleep.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = J658W2V76T;
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = script/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stubbornmulesoftware.explicitmusic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_REQUIRED = YES;
+			};
+			name = Release;
+		};
+		2E98D8A9000A00000000000F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		2E98D8A9000A000000000010 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2E98D8A9000A00000000000D /* Build configuration list for PBXNativeTarget "Unbleep" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2E98D8A9000A00000000000B /* Debug */,
+				2E98D8A9000A00000000000C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2E98D8A9000A00000000000E /* Build configuration list for PBXProject "Unbleep" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2E98D8A9000A00000000000F /* Debug */,
+				2E98D8A9000A000000000010 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2E98D8A9000A000000000008 /* Project object */;
+}
