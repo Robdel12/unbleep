@@ -2,7 +2,7 @@
 
 Apple Music kept sneaking clean edits into my library, so I made Unbleep. It finds the clean tracks, lets you play both versions side by side, and swaps in the explicit ones you pick.
 
-![Unbleep comparing a clean track with its explicit version](docs/images/review.png)
+![Unbleep’s review queue showing the clean and explicit editions of a demo track side by side](docs/images/review.png)
 
 Download Unbleep from [Releases](https://github.com/Robdel12/unbleep/releases), unzip it, and drag it into Applications. You’ll need macOS 14 or later, an Apple Music subscription, and Sync Library turned on.
 
